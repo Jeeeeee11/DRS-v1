@@ -89,8 +89,6 @@ if st.button("Generate Recipes"):
         if image_url:
             st.image(image_url, caption=dish_title, width=256)
             st.markdown(f"**[View Recipe]({recipe_url})**")
-        else:
-            st.image(placeholder_image, caption=dish_title, width=256)
 
         for recipe in generated_recipes:
             text = recipe[0]
