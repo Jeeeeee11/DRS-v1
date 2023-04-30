@@ -7,7 +7,7 @@ from PIL import Image
 
 
 # Load the placeholder image
-placeholder_image_path = "asset/frame/no_food.png"
+placeholder_image_path = "C:\Users\jejun\Downloads\DRS-v1\DRS-PERSONAL\recipe_app\asset\frame\no_food.png"
 placeholder_image = Image.open(placeholder_image_path)
 
 def search_recipe(title, app_id, app_key):
