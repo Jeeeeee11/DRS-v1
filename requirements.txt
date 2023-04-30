@@ -1,0 +1,6 @@
+streamlit>=0.86.0
+requests>=2.25.1
+Pillow>=8.2.0
+streamlit_ace>=0.1.1
+transformers>=4.0.0
+tensorrt>=7.0.0
