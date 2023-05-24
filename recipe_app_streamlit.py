@@ -6,26 +6,17 @@ import os
 from PIL import Image
 
 
-def search_recipe(title):
+def search_recipe(title, app_id, app_key):
     query = f"{title} dish"
-    params = {
-        "q": query,
-        "tbm": "isch",
-        "ijn": "0",
-        "api_key": "4e9bb51dde629184a62c67633138d311a9bef367"
-    }
-    url = "https://serpapi.com/search.json"
-    response = requests.get(url, params=params)
+    url = f"https://api.edamam.com/search?q={query}&app_id={app_id}&app_key={app_key}&from=0&to=1"
+    response = requests.get(url)
 
     if response.status_code == 200:
         data = response.json()
-        if "images_results" in data:
-            images = data["images_results"]
-            if images:
-                image = images[0]
-                image_url = image["original"]
-                return image_url
-    return None
+        if data["hits"]:
+            recipe = data["hits"][0]["recipe"]
+            return recipe["image"], recipe["url"]
+    return None, None
 
 # Replace these with your Edamam API credentials
 app_id = "b0676972"
@@ -92,7 +83,8 @@ if st.button("Generate Recipes"):
                 section = section.replace("title:", "")
                 headline = "Title"
                 dish_title = section.strip().capitalize()
-                image_url = search_recipe(dish_title)
+                image_url, recipe_url = search_recipe(dish_title, app_id, app_key)
+            # ... rest of the section logic
 
         if image_url:
             st.image(image_url, caption=dish_title, width=256)
