@@ -24,6 +24,7 @@ def search_recipe(title, serper_dev_key):
                 return image_url
     return None
 
+
 # Replace this with your Serper.dev API key
 serper_dev_key = "4e9bb51dde629184a62c67633138d311a9bef367"
 
@@ -86,36 +87,37 @@ if st.button("Generate Recipes"):
                 section = section.strip()
                 if section.startswith("title:"):
                     section = section.replace("title:", "")
-                    headline = "Title"
                     dish_title = section.strip().capitalize()
                     image_url = search_recipe(dish_title, serper_dev_key)
                     # ... rest of the section logic
 
         if image_url:
             st.image(image_url, caption=dish_title, width=256)
-            st.markdown(f"**Image Source: Serper.dev**")
+            st.markdown(f"**Title: {dish_title}**")
+            for recipe in generated_recipes:
+                text = recipe[0]
+                sections = text.split("\n")
+                for section in sections:
+                    section = section.strip()
+                    if section.startswith("ingredients:"):
+                        section = section.replace("ingredients:", "")
+                        headline = "Ingredients"
+                    elif section.startswith("directions:"):
+                        section = section.replace("directions:", "")
+                        headline = "Directions"
 
-        for recipe in generated_recipes:
-            text = recipe[0]
-            sections = text.split("\n")
-            for section in sections:
-                section = section.strip()
-                if section.startswith("title:"):
-                    section = section.replace("title:", "")
-                    headline = "Title"
-                elif section.startswith("ingredients:"):
-                    section = section.replace("ingredients:", "")
-                    headline = "Ingredients"
-                elif section.startswith("directions:"):
-                    section = section.replace("directions:", "")
-                    headline = "Directions"
-
-                if headline == "Title":
-                    st.markdown(f"**{headline}: {section.strip().capitalize()}**", unsafe_allow_html=True)
-                # ... rest of the section logic
+                    if headline == "Ingredients":
+                        section_info = section.strip().capitalize()
+                        st.markdown(f"**{headline}:**", unsafe_allow_html=True)
+                        st.markdown(section_info, unsafe_allow_html=True)
+                    else:
+                        section_info = section.strip().capitalize()
+                        st.markdown(f"**{headline}:**", unsafe_allow_html=True)
+                        st.markdown(section_info, unsafe_allow_html=True)
 
             st.write("-" * 130)
 
     else:
         st.warning("Please enter ingredients.")
+
 
