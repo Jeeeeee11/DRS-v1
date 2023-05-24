@@ -19,11 +19,10 @@ def search_recipe(title, serper_dev_key):
         data = response.json()
         if "images" in data:
             images = data["images"]
-            if images:
+            if images and isinstance(images, list) and "original" in images[0]:
                 image_url = images[0]["original"]
                 return image_url
     return None
-
 
 # Replace this with your Serper.dev API key
 serper_dev_key = "4e9bb51dde629184a62c67633138d311a9bef367"
