@@ -12,7 +12,7 @@ def search_recipe(title, api_key):
     params = {
         "q": query,
         "tbm": "isch",
-        "api_key": "4e9bb51dde629184a62c67633138d311a9bef367",
+        "api_key": 4e9bb51dde629184a62c67633138d311a9bef367,
     }
     search = GoogleSearch(params)
     results = search.get_dict()
