@@ -6,21 +6,21 @@ import os
 from PIL import Image
 
 
-def search_images(query, serper_api_key, num_images=3):
-    url = f"https://api.serper.dev/images?query={query}&api_key={serper_api_key}&num_images={num_images}"
+def search_recipe(title, app_id, app_key):
+    query = f"{title} dish"
+    url = f"https://api.edamam.com/search?q={query}&app_id={app_id}&app_key={app_key}&from=0&to=1"
     response = requests.get(url)
 
     if response.status_code == 200:
         data = response.json()
-        if data["data"]:
-            image_urls = [item["url"] for item in data["data"]]
-            return image_urls
-    return None
+        if data["hits"]:
+            recipe = data["hits"][0]["recipe"]
+            return recipe["image"], recipe["url"]
+    return None, None
 
-
-# Replace "YOUR_SERPER_API_KEY" with your actual Serper API key
-serper_api_key = "4e9bb51dde629184a62c67633138d311a9bef367"
-
+# Replace these with your Edamam API credentials
+app_id = "b0676972"
+app_key = "f0125506ff24f7a645dc0f6771731116"
 
 # Custom CSS for styling
 st.markdown(
