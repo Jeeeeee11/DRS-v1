@@ -92,7 +92,7 @@ if st.button("Generate Recipes"):
                 section = section.replace("title:", "")
                 headline = "Title"
                 dish_title = section.strip().capitalize()
-                image_url, recipe_url = search_recipe(dish_title, app_id, app_key)
+                image_url = search_recipe(dish_title)
 
         if image_url:
             st.image(image_url, caption=dish_title, width=256)
