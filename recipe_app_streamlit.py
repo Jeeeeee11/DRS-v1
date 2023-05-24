@@ -6,22 +6,21 @@ import os
 from PIL import Image
 
 
-def search_recipe(title, serper_api_key):
-    query = f"{title} dish"
-    url = f"https://serpapi.com/search.json?q={query}&tbm=isch&api_key={serper_api_key}"
+def search_images(query, serper_api_key, num_images=3):
+    url = f"https://api.serper.dev/images?query={query}&api_key={serper_api_key}&num_images={num_images}"
     response = requests.get(url)
 
     if response.status_code == 200:
         data = response.json()
-        if "images_results" in data:
-            images = data["images_results"]
-            if images:
-                image = images[0]
-                return image["original"], image["source"]
-    return None, None
+        if data["data"]:
+            image_urls = [item["url"] for item in data["data"]]
+            return image_urls
+    return None
 
-# Replace this with your Serper API key
+
+# Replace "YOUR_SERPER_API_KEY" with your actual Serper API key
 serper_api_key = "4e9bb51dde629184a62c67633138d311a9bef367"
+
 
 # Custom CSS for styling
 st.markdown(
@@ -77,22 +76,20 @@ if st.button("Generate Recipes"):
         for recipe in generated_recipes:
             text = recipe[0]
             sections = text.split("\n")
+            dish_title = ""
             for section in sections:
                 section = section.strip()
                 if section.startswith("title:"):
                     section = section.replace("title:", "")
-                    headline = "Title"
                     dish_title = section.strip().capitalize()
-                    image_url, recipe_url = search_recipe(dish_title, serper_api_key)
-                    # ... rest of the section logic
+                    image_urls = search_images(dish_title, serper_api_key, num_images=3)
+                    if image_urls:
+                        break
 
-        if image_url:
-            st.image(image_url, caption=dish_title, width=256)
-            st.markdown(f"**[View Recipe]({recipe_url})**")
+            if image_urls:
+                for image_url in image_urls:
+                    st.image(image_url, caption=dish_title, width=256)
 
-        for recipe in generated_recipes:
-            text = recipe[0]
-            sections = text.split("\n")
             for section in sections:
                 section = section.strip()
                 if section.startswith("title:"):
