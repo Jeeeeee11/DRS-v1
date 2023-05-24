@@ -1,5 +1,4 @@
-from transformers import AutoModelForSeq2SeqLM
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 from transformers import pipeline
 import tensorrt
 
