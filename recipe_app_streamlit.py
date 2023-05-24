@@ -20,7 +20,7 @@ def search_recipe(title, app_id, app_key):
 
 # Replace these with your Edamam API credentials
 app_id = "b0676972"
-app_key = "f0125506ff24f7a645dc0f6771731116	"
+app_key = "f0125506ff24f7a645dc0f6771731116"
 
 
 # Custom CSS for styling
