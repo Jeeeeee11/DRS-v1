@@ -4,25 +4,24 @@ from streamlit_ace import st_ace
 import requests
 import os
 from PIL import Image
-from serpapi import GoogleSearch
 
 
-def search_recipe(title, api_key):
+def search_recipe(title, app_id, app_key):
     query = f"{title} dish"
-    params = {
-        "q": query,
-        "tbm": "isch",
-        "api_key": "4e9bb51dde629184a62c67633138d311a9bef367"
-    }
-    search = GoogleSearch(params)
-    results = search.get_dict()
+    url = f"https://api.edamam.com/search?q={query}&app_id={app_id}&app_key={app_key}&from=0&to=1"
+    response = requests.get(url)
 
-    if "images_results" in results:
-        images = results["images_results"]
-        if images:
-            image_url = images[0]["original"]
-            return image_url
-    return None
+    if response.status_code == 200:
+        data = response.json()
+        if data["hits"]:
+            recipe = data["hits"][0]["recipe"]
+            return recipe["image"], recipe["url"]
+    return None, None
+
+# Replace these with your Edamam API credentials
+app_id = "b0676972"
+app_key = "f0125506ff24f7a645dc0f6771731116	"
+
 
 # Custom CSS for styling
 st.markdown(
@@ -84,7 +83,7 @@ if st.button("Generate Recipes"):
                 section = section.replace("title:", "")
                 headline = "Title"
                 dish_title = section.strip().capitalize()
-                image_url = search_recipe(dish_title, api_key)
+                image_url, recipe_url = search_recipe(dish_title, app_id, app_key)
             # ... rest of the section logic
 
         if image_url:
