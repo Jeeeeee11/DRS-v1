@@ -88,7 +88,8 @@ if st.button("Generate Recipes"):
 
             if image_urls:
                 for image_url in image_urls:
-                    st.image(image_url, caption=dish_title, width=256)
+                    image = Image.open(requests.get(image_url, stream=True).raw)
+                    st.image(image, caption=dish_title, width=256)
 
             for section in sections:
                 section = section.strip()
