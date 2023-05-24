@@ -73,24 +73,26 @@ if st.button("Generate Recipes"):
         generated_recipes = generation_function(items_list, num_recipes=3)
         ingredients_list = [ingredient.strip() for ingredient in items.split(',')]
 
+        image_urls = []
+        recipe_urls = []
+        dish_titles = []
+
         for recipe in generated_recipes:
             text = recipe[0]
             sections = text.split("\n")
-            dish_title = ""
             for section in sections:
                 section = section.strip()
                 if section.startswith("title:"):
                     section = section.replace("title:", "")
                     dish_title = section.strip().capitalize()
-                    image_urls = search_images(dish_title, serper_api_key, num_images=3)
-                    if image_urls:
-                        break
+                    image_url, recipe_url = search_recipe(dish_title, app_id, app_key)
+                    image_urls.append(image_url)
+                    recipe_urls.append(recipe_url)
+                    dish_titles.append(dish_title)
 
-            if image_urls:
-                for image_url in image_urls:
-                    image = Image.open(requests.get(image_url, stream=True).raw)
-                    st.image(image, caption=dish_title, width=256)
-
+        for idx, recipe in enumerate(generated_recipes):
+            text = recipe[0]
+            sections = text.split("\n")
             for section in sections:
                 section = section.strip()
                 if section.startswith("title:"):
@@ -118,6 +120,10 @@ if st.button("Generate Recipes"):
                     section_info = [f"{i+1}. {info.strip().capitalize()}" for i, info in enumerate(section.split("--"))]
                     st.markdown(f"**{headline}:**", unsafe_allow_html=True)
                     st.write("\n".join(section_info))
+
+            if image_urls[idx]:
+                st.image(image_urls[idx], caption=dish_titles[idx], width=256)
+                st.markdown(f"**[View Recipe]({recipe_urls[idx]})**")
 
             st.write("-" * 130)
 
