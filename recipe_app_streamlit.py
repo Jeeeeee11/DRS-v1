@@ -6,22 +6,22 @@ import os
 from PIL import Image
 
 
-def search_recipe(title, app_id, app_key):
+def search_recipe(title, serper_api_key):
     query = f"{title} dish"
-    url = f"https://api.edamam.com/search?q={query}&app_id={app_id}&app_key={app_key}&from=0&to=1"
+    url = f"https://serpapi.com/search.json?q={query}&tbm=isch&api_key={serper_api_key}"
     response = requests.get(url)
 
     if response.status_code == 200:
         data = response.json()
-        if data["hits"]:
-            recipe = data["hits"][0]["recipe"]
-            return recipe["image"], recipe["url"]
+        if "images_results" in data:
+            images = data["images_results"]
+            if images:
+                image = images[0]
+                return image["original"], image["source"]
     return None, None
 
-# Replace these with your Edamam API credentials
-app_id = "b0676972"
-app_key = "f0125506ff24f7a645dc0f6771731116	"
-
+# Replace this with your Serper API key
+serper_api_key = "4e9bb51dde629184a62c67633138d311a9bef367"
 
 # Custom CSS for styling
 st.markdown(
@@ -73,18 +73,18 @@ if st.button("Generate Recipes"):
         items_list = [items]
         generated_recipes = generation_function(items_list, num_recipes=3)
         ingredients_list = [ingredient.strip() for ingredient in items.split(',')]
-        
+
         for recipe in generated_recipes:
             text = recipe[0]
             sections = text.split("\n")
-        for section in sections:
-            section = section.strip()
-            if section.startswith("title:"):
-                section = section.replace("title:", "")
-                headline = "Title"
-                dish_title = section.strip().capitalize()
-                image_url, recipe_url = search_recipe(dish_title, app_id, app_key)
-            # ... rest of the section logic
+            for section in sections:
+                section = section.strip()
+                if section.startswith("title:"):
+                    section = section.replace("title:", "")
+                    headline = "Title"
+                    dish_title = section.strip().capitalize()
+                    image_url, recipe_url = search_recipe(dish_title, serper_api_key)
+                    # ... rest of the section logic
 
         if image_url:
             st.image(image_url, caption=dish_title, width=256)
@@ -122,6 +122,6 @@ if st.button("Generate Recipes"):
                     st.write("\n".join(section_info))
 
             st.write("-" * 130)
-            
+
     else:
         st.warning("Please enter ingredients.")
