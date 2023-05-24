@@ -5,4 +5,4 @@ streamlit_ace>=0.1.1
 transformers>=4.0.0
 tensorrt>=7.0.0
 torch
-google-search-results
+google-search-results==2.0.1
