@@ -6,8 +6,8 @@ import os
 from PIL import Image
 
 
-def search_recipe(title, items, app_id, app_key):
-    query = f"{title} dish {items}"
+def search_recipe(title, ingredients, app_id, app_key):
+    query = f"{title} {', '.join(ingredients)} dish"
     url = f"https://api.edamam.com/search?q={query}&app_id={app_id}&app_key={app_key}&from=0&to=1"
     response = requests.get(url)
 
@@ -17,7 +17,6 @@ def search_recipe(title, items, app_id, app_key):
             recipe = data["hits"][0]["recipe"]
             return recipe["image"], recipe["url"]
     return None, None
-
 
 # Replace these with your Edamam API credentials
 app_id = "b0676972"
@@ -70,7 +69,7 @@ items = st_ace(
 # Generate recipes button
 if st.button("Generate Recipes"):
     if items:
-        items_list = [ingredient.strip() for ingredient in items.split(',')]
+        items_list = [items]
         generated_recipes = generation_function(items_list, num_recipes=3)
         ingredients_list = [ingredient.strip() for ingredient in items.split(',')]
 
@@ -84,12 +83,12 @@ if st.button("Generate Recipes"):
             for section in sections:
                 section = section.strip()
                 if section.startswith("title:"):
-                    section = section.replace("title:", "")
-                    dish_title = section.strip().capitalize()
-                    image_url, recipe_url = search_recipe(dish_title, items, app_id, app_key)
-                    image_urls.append(image_url)
-                    recipe_urls.append(recipe_url)
-                    dish_titles.append(dish_title)
+                   section = section.replace("title:", "")
+                   dish_title = section.strip().capitalize()
+                   image_url, recipe_url = search_recipe(dish_title, ingredients_list, app_id, app_key)
+                   image_urls.append(image_url)
+                   recipe_urls.append(recipe_url)
+                   dish_titles.append(dish_title)
 
         for idx, recipe in enumerate(generated_recipes):
             text = recipe[0]
