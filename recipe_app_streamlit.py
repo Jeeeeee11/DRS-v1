@@ -31,10 +31,10 @@ st.markdown(
         padding-bottom: 2rem;
     }
     h1 {
-        font-size: 4rem;
+        font-size: 6rem;
     }
     h2 {
-        font-size: 3rem;
+        font-size: 5rem;
     }
     .stButton>button {
         background-color: #000000;
